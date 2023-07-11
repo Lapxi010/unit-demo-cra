@@ -2,7 +2,10 @@ name: Build for gp
 
 run-name: ${{ github.actor }} build for gp
 
-on: [ pull_request, push ]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   builder:
