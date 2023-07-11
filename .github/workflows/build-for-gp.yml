@@ -5,7 +5,7 @@ run-name: ${{ github.actor }} build for gp
 on: [pull_request, push]
 
 jobs:
-  run-scripts:
+  builder:
     runs-on: ubuntu-latest
 
     strategy:
@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: ${{matrix.node-version}}
 
-      - name: Installing dependences
-        run: npm ci
+        - name: Installing dependences
+          run: npm ci
 
-      - name: Run build for gp
-        run: npm run build
+        - name: Run build for gp
+          run: npm run build
