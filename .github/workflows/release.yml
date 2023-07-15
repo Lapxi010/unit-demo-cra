@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ github.ACTIONS_TOKEN }}
+          token: ${{ github.GITHUB_TOKEN }}
       - name: Create release branch
         run: |
           git checkout -b release-${{ github.ref_name }}
