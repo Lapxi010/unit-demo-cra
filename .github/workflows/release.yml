@@ -1,0 +1,20 @@
+name: New release
+
+run-name: ${{ github.actor }} create new release
+
+on:
+  push:
+    tags:
+      - 'v\d+'
+
+jobs:
+  create-branch-for-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release branch
+        run: |
+          git checkout -b release-${{ github.ref_name }}
+          git push -u origin release-${{ github.ref_name }}
