@@ -86,7 +86,7 @@ jobs:
             Release
 
       - name: Create important links
-        uses: peter-evans/create-or-update-comment@3
+        uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ steps.issue.outputs.issue-number }}
           body: |
@@ -105,7 +105,7 @@ jobs:
 
     steps:
       - name: Create description about deploy
-        uses: peter-evans/create-or-update-comment@3
+        uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ steps.issue.outputs.issue-number }}
           body: |
@@ -113,6 +113,6 @@ jobs:
             Link: https://lapxi010.github.io/unit-demo-cra/
 
       - name: Close issue
-        uses: peter-evans/close-issue@3
+        uses: peter-evans/close-issue@v3
         with:
           issue-number: ${{ steps.issue.outputs.issue-number }}
