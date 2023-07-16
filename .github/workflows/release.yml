@@ -41,12 +41,14 @@ jobs:
           echo "date=$(date +'%d.%m.%Y %H:%M:%S')" >> $GITHUB_OUTPUT
 
       - name: Generate Changelog
-        uses: BobAnkh/auto-generate-changelog@v1.2.5
         id: changelog
+        uses: requarks/changelog-action@v1
         with:
-          ACCESS_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          token: ${{ github.token }}
+          tag: ${{ github.ref_name }}
+          writeToFile: false
 
-      - name: Create team sync issue
+      - name: Create issue
         uses: imjohnbo/issue-bot@3d96848fb5e9a4a473bb81ae62b4b4866a56e93a
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,6 +63,6 @@ jobs:
             The author of the release is -  ${{ github.actor }}
 
             Changelog: 
-            ${{ steps.changelog.outputs.changelog }}
+            ${{ steps.changelog.outputs.changes }}
           pinned: false
           close-previous: false
