@@ -43,7 +43,7 @@ jobs:
         id: tag
         run: |
           cur_tag=${{ github.ref_name }} 
-          prev_tag=$(git describe --tags --abbrev=0 ${cur_tag}^)
+          prev_tag=$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | tail -2 | head -1)
           echo "current_tag=${cur_tag}" >> "$GITHUB_OUTPUT"
           echo "previous_tag=${prev_tag}" >> "$GITHUB_OUTPUT"
           echo "author=${{ github.actor }}" >> $GITHUB_OUTPUT
