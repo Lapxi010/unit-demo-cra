@@ -1,17 +1,15 @@
-name: Build for gp
+name: Deploy
 
-run-name: ${{ github.actor }} build for gp
+run-name: ${{ github.actor }} deploy
 
 on: [workflow_call]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [ 18.x ]
-
     steps:
       - uses: actions/checkout@v3
         with:
