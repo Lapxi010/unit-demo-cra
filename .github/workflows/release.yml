@@ -51,12 +51,10 @@ jobs:
 
       - name: Generate Changelog
         id: changelog
-        uses: requarks/changelog-action@v1
+        uses: nielstenboom/semantic-changelog-generator@v1.2.0
         with:
-          token: ${{ github.token }}
-          tag: ${{ github.ref_name }}
-          writeToFile: false
-          useGitmojis: true
+          base: ${{ steps.tag.outputs.previous_tag }}
+          head: ${{ github.ref_name }}
 
       - name: Create issue
         uses: imjohnbo/issue-bot@3d96848fb5e9a4a473bb81ae62b4b4866a56e93a
