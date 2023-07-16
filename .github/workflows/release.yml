@@ -43,7 +43,7 @@ jobs:
         id: tag
         run: |
           cur_tag=${{ github.ref_name }} 
-          prev_tag=$(git describe --tags --abbrev=0 ${cur_tag}^)
+          prev_tag=$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | tail -2 | head -1)
           echo "current_tag=${cur_tag}" >> "$GITHUB_OUTPUT"
           echo "previous_tag=${prev_tag}" >> "$GITHUB_OUTPUT"
           echo "author=${{ github.actor }}" >> $GITHUB_OUTPUT
@@ -51,15 +51,15 @@ jobs:
 
       - name: Generate Changelog
         id: changelog
-        uses: requarks/changelog-action@v1
+        uses: nielstenboom/semantic-changelog-generator@v1
         with:
-          token: ${{ github.token }}
-          tag: ${{ github.ref_name }}
-          writeToFile: false
-          useGitmojis: true
+          base: ${{ steps.tag.outputs.previous_tag }}
+          head: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
 
       - name: Create issue
-        uses: imjohnbo/issue-bot@3d96848fb5e9a4a473bb81ae62b4b4866a56e93a
+        uses: imjohnbo/issue-bot@v3
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         with:
@@ -72,8 +72,8 @@ jobs:
             Creation time - ${{ steps.tag.outputs.date }}
             The author of the release is -  ${{ github.actor }}
 
-            Changelog: 
-            ${{ steps.changelog.outputs.changes }}
+            Changelog:  
+            ${{ steps.changelog.outputs.changelog }}
           pinned: false
           close-previous: false
 
