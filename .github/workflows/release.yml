@@ -58,16 +58,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
 
-      - name:  Af
-        run: |
-          echo ${{ steps.changelog.outputs.changes }}
-
-      - name: Get the changelog
-        run: |
-          cat << "EOF"
-          ${{ steps.changelog.outputs.changelog }}
-          EOF
-
       - name: Create issue
         uses: imjohnbo/issue-bot@v3
         env:
@@ -82,8 +72,8 @@ jobs:
             Creation time - ${{ steps.tag.outputs.date }}
             The author of the release is -  ${{ github.actor }}
 
-            Changelog: 
-            ${{ steps.changelog.outputs.changes }}
+            Changelog:  
+            ${{ steps.changelog.outputs.changelog }}
           pinned: false
           close-previous: false
 
