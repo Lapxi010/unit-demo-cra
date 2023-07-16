@@ -55,13 +55,14 @@ jobs:
         with:
           base: ${{ steps.tag.outputs.previous_tag }}
           head: ${{ github.ref_name }}
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       - name:  Af
         run: |
           echo ${{ steps.changelog.outputs.changes }}
 
       - name: Create issue
-        uses: imjohnbo/issue-bot@3d96848fb5e9a4a473bb81ae62b4b4866a56e93a
+        uses: imjohnbo/issue-bot@v3
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         with:
