@@ -21,3 +21,44 @@ jobs:
         run: |
           git checkout -b release-${{ github.ref_name }}
           git push -u origin release-${{ github.ref_name }}
+  create-registry:
+    runs-on: ubuntu-latest
+    needs: create-branch-for-release
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Create description for tag
+        id: tag
+        run: |
+          cur_tag=${{ github.ref_name }} 
+          prev_tag=$(git describe --tags --abbrev=0 ${CURRENT_TAG}^)
+          echo "current_tag=${cur_tag}" >> "$GITHUB_OUTPUT"
+          echo "previous_tag=${prev_tag}" >> "$GITHUB_OUTPUT"
+          echo "author=${{ github.actor }}" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%d.%m.%Y %H:%M:%S')" >> $GITHUB_OUTPUT
+
+      - name: Generate Changelog
+      - uses: BobAnkh/auto-generate-changelog@v1.2.5
+        id: changelog
+        with:
+          ACCESS_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Create team sync issue
+      - uses: imjohnbo/issue-bot@3d96848fb5e9a4a473bb81ae62b4b4866a56e93a
+        with:
+          assignees: ${{steps.outputs.tag.current_tag}}
+          labels: "Release"
+          title: New realease ${{ github.ref_name }}
+          body: |
+            ## This is a new release - ${{ github.ref_name }}
+            
+            Creation time - ${{ steps.tag.outputs.date }}
+            The author of the release is -  ${{ github.actor }}
+
+            Changelog: 
+            ${{ steps.changelog.outputs.changelog }}
+          pinned: false
+          close-previous: false
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
