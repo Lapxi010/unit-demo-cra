@@ -51,15 +51,22 @@ jobs:
 
       - name: Generate Changelog
         id: changelog
-        uses: nielstenboom/semantic-changelog-generator@v1.2.0
+        uses: nielstenboom/semantic-changelog-generator@v1
         with:
           base: ${{ steps.tag.outputs.previous_tag }}
           head: ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+
       - name:  Af
         run: |
           echo ${{ steps.changelog.outputs.changes }}
+
+      - name: Get the changelog
+        run: |
+          cat << "EOF"
+          ${{ steps.changelog.outputs.changelog }}
+          EOF
 
       - name: Create issue
         uses: imjohnbo/issue-bot@v3
